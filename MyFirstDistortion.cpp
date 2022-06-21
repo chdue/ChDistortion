@@ -8,6 +8,7 @@ const int kNumPrograms = 1;
 enum EParams
 {
     kThreshold = 0,
+    kGain = 1,
     kNumParams = 4
 };
 
@@ -16,9 +17,12 @@ enum ELayout
   kWidth = GUI_WIDTH,
   kHeight = GUI_HEIGHT,
 
-  kThresholdX = 100,
-  kThresholdY = 100,
-  kKnobFrames = 60
+  kThresholdX = 145,
+  kThresholdY = 145,
+  kKnobFrames = 60,
+
+  kGainX = 245,
+  kGainY = 245
 };
 
 MyFirstDistortion::MyFirstDistortion(IPlugInstanceInfo instanceInfo)
@@ -28,14 +32,19 @@ MyFirstDistortion::MyFirstDistortion(IPlugInstanceInfo instanceInfo)
 
   //arguments are: name, defaultVal, minVal, maxVal, step, label
   GetParam(kThreshold)->InitDouble("Threshold", 100., 0.01, 100.0, 0.01, "%");
-  GetParam(kThreshold)->SetShape(2.);
+  GetParam(kThreshold)->SetShape(1.);
+
+  GetParam(kGain)->InitDouble("Makeup Gain", 0, -10.0, 10.0, 0.01, "dBs");
+  GetParam(kGain)->SetShape(1.);
 
   IGraphics* pGraphics = MakeGraphics(this, kWidth, kHeight);
   pGraphics->AttachPanelBackground(&COLOR_RED);
 
   IBitmap knob = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, kKnobFrames);
+  IBitmap gKnob = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, kKnobFrames); //will be changed when new resources are made
 
   pGraphics->AttachControl(new IKnobMultiControl(this, kThresholdX, kThresholdY, kThreshold, &knob));
+  pGraphics->AttachControl(new IKnobMultiControl(this, kGainX, kGainY, kGain, &gKnob));
 
   AttachGraphics(pGraphics);
 
@@ -66,6 +75,7 @@ void MyFirstDistortion::ProcessDoubleReplacing(double** inputs, double** outputs
                 *output = fmax(*input, -mThreshold);
             }
             *output /= mThreshold;
+            *output *= mGain;
         }
     }
 }
@@ -86,14 +96,18 @@ void MyFirstDistortion::OnParamChange(int paramIdx)
       mThreshold = GetParam(kThreshold)->Value() / 100.;
       break;
 
+    case kGain:
+      mGain = exp(GetParam(kGain)->Value() / 10); // 10 * log(ratio) = dB Change
+      break;
+
     default:
       break;
   }
 }
 
 void MyFirstDistortion::CreatePresets() {
-    MakePreset("clean", 100.0);
-    MakePreset("buzz", 80.0);
-    MakePreset("harsh", 40.0);
-    MakePreset("destroyed", 0.01);
+    MakePreset("clean", 100.0, 1.0);
+    MakePreset("buzz", 80.0, 1.0);
+    MakePreset("harsh", 40.0, 1.0);
+    MakePreset("destroyed", 0.01, 1.0);
 }

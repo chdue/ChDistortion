@@ -15,6 +15,7 @@ public:
 
 private:
   double mThreshold;
+  double mGain;
   void CreatePresets();
 };
 
