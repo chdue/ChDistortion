@@ -58,9 +58,13 @@ instrument determined by PLUG _IS _INST
 
 // Unique IDs for each image resource.
 #define KNOB_ID 101
+#define KNOB_ID_NEW 102
+#define BACKGROUND_ID 103
 
 // Image resource locations for this plug.
 #define KNOB_FN "resources/img/knob.png"
+#define KNOB_NEW "resources/img/MainKnob.png"
+#define BACKGROUND_FN "resources/img/distortionBG.png"
 
 // GUI default dimensions
 #define GUI_WIDTH 338

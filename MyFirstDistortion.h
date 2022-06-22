@@ -14,7 +14,7 @@ public:
   void ProcessDoubleReplacing(double** inputs, double** outputs, int nFrames);
 
 private:
-  double mThreshold;
+  double mDistortionLevel;
   double mGain;
   void CreatePresets();
 };
