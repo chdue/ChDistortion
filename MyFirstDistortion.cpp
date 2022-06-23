@@ -19,7 +19,7 @@ enum ELayout
 
   kDistortionLevelX = (kWidth - 64)/2, // 64 is the width of MainKnob.png
   kDistortionLevelY = (kHeight - 64) / 2,
-  kKnobFrames = 31,
+  kKnobFrames = 120,
 
   kGainX = kDistortionLevelX + 100,
   kGainY = kDistortionLevelY + 100,
@@ -35,7 +35,7 @@ MyFirstDistortion::MyFirstDistortion(IPlugInstanceInfo instanceInfo)
   GetParam(kDistortionLevel)->InitDouble("DistortionLevel", 0., 0., 99.99, 0.01, "%");
   GetParam(kDistortionLevel)->SetShape(1.);
 
-  GetParam(kGain)->InitDouble("Makeup Gain", 0, -23.0, 10.0, 0.01, "dBs");
+  GetParam(kGain)->InitDouble("Makeup Gain", 0, -23.0, 23.0, 0.01, "dBs");
   GetParam(kGain)->SetShape(1.);
 
   IGraphics* pGraphics = MakeGraphics(this, kWidth, kHeight);
